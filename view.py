@@ -4,7 +4,7 @@ from flask import render_template, redirect, url_for, request, json, session
 from sqlalchemy import extract
 # from model import Project, Designation, Task, User, TimeSheet
 from forms import AddProject, ViewProject, ViewUser, ViewWork, AskDesignation, AddUser, AddWork
-from config import db, bd_report, key
+from config import bd_report
 from datetime import datetime
 
 #################### UPDATED TO CHECK PULL PUSH GIT ###############
@@ -16,6 +16,15 @@ to_reload = False
 @bd_report.route('/',methods=['GET','POST'])
 def index():
     return render_template('trello_login.html')
+
+@bd_report.route('/admin/login', methods=['GET','POST'])
+def login():
+    if request.method == 'POST':
+        userN = request.form['username']
+        passW = request.form['password']
+        if userN == 'admin' and passW == 'admin':
+            return render_template('add/add_user.html')
+    return render_template('login.html')
 
 @bd_report.route('/home')
 def home():

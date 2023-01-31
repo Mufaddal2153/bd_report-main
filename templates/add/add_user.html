@@ -5,27 +5,31 @@
     <title>Add User</title>
 </head>
 <body>
-    {% extends "base.html" %}
-    {% block content %}
-    <div class="jumbotron">
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <table class="user-table">
-            <tr>
-                <th>{{ form.user.label }}</th>
-                <td>{{ form.user() }}</td>
-            </tr>
-            <tr>
-                <th>{{ form.designation.label }}</th>
-                <td>{{ form.designation() }}</td>
-            </tr>
-            <tr>
-                <td>{{ form.submit() }}</td>
-            </tr>
-        </table>
+    {% extends "admin_base.html" %}
+    {% block name_email %}
+        <h3 class="name">MOIZ INSIDE</h3>
+        <p class="email">MOIZ INSIDE</p>
+    {% endblock %}
+    {% block admin_page %}
+    <!-- <div class="jumbotron"> -->
+        <form method="POST">
+            <!-- {# form.hidden_tag() #} -->
+            <table class="user-table">
+                <tr>
+                    <th> <label for="new_user">UserName: </label> </th>
+                    <td><input type="text" name="new_user"></td>
+                </tr>
+                <tr>
+                    <th> <label for="new_user">Designation: </label></th>
+                    <td><input type="text" name="new_user"></td>
+                </tr>
+                <tr>
+                    <td><input type="submit" name="submit" id="submit"></td>
+                </tr>
+            </table>
 
-    </form>
-    </div>
+        </form>
+    <!-- </div> -->
     {% endblock %}
 </body>
 </html>

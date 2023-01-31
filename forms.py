@@ -4,7 +4,7 @@ from flask import session
 from wtforms_alchemy.fields import QuerySelectField
 from wtforms import StringField, IntegerField, SubmitField, FloatField, DateField, SelectField
 from wtforms.validators import DataRequired
-from model import Project,Designation,Task,User,TimeSheet
+# from model import Project,Designation,Task,User,TimeSheet
 class AddProject(FlaskForm):
     work = QuerySelectField(query_factory=lambda: Task.query.filter_by(designation_id=session.get("designation_id")).all(),get_label='work')
     hours = FloatField("Enter hours in decimal")

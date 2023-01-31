@@ -29,16 +29,59 @@ body .page .navigation ul.navigations li.dashboard-btn:before{font-family: "Font
 body .page .navigation ul.navigations li.time-entry-btn:before{font-family: "FontAwesome"; font-weight: 400; content: "\f0b1"; margin-right: 10px;}
 body .page .navigation ul.navigations li.log-off-btn:before{font-family: "FontAwesome"; font-weight: 400; content: "\f011"; margin-right: 10px;}
 body .page .navigation p.email, body .page .navigation p.version{color: #5C6063;}
-body .page .dashboard{padding: 1em;}
-body .page .dashboard .top-sec{display: flex; align-items: center;}
-body .page .dashboard .top-sec select{width: 50%;}
-body .page .dashboard .top-sec a{width: 25%; padding: 0.5em 2em; background: #E63144; color: #fff; border: none;}
-body .page .dashboard .header{background: #F7F7F7; text-align: center; padding: 1em 0; margin-top: 1em;}
+body .page .dashboard {padding: 1em;}
+body .page .dashboard .top-sec {display: flex; align-items: center;}
+body .page .dashboard .top-sec select {width: 50%;}
+body .page .dashboard .top-sec a {width: 25%; padding: 0.5em 2em; background: #E63144; color: #fff; border: none;}
+body .page .dashboard .header {background: #F7F7F7; text-align: center; padding: 1em 0; margin-top: 1em;}
 
 
+body footer {background: #efefef; padding: 1em 0.5em;}
+body footer p {margin: 0;}
 
+.user-table th {
+    width: 20%;
+}
+.user-table tr td{
+    padding-bottom: 15px;
+}
+.add-project th{
+    width: 20%;
+}
+.add-project tr td{
+    padding-bottom: 15px;
+}
+.add-project-name-table th{
+    width: 20%;
+}
+.add-work-table th{
+    width: 20%;
+}
 
+form {
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
 
+label {
+    display: block;
+    margin-bottom: 10px;
+}
 
-body footer{background: #efefef; padding: 1em 0.5em;}
-body footer p{margin: 0;}
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    width: 10vh;
+}
+
+.col-md-1, .col-md-2{ display: inline; }
+

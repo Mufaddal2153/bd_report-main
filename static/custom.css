@@ -1,8 +1,7 @@
-body{ font-family: Arial, Helvetica; margin: 0; padding: 0; background: #fff; }
+/* body{ font-family: Arial, Helvetica; margin: 0; padding: 0; background: #fff; }*/
 body table{
     width: 100%;
-
-}
+} 
 
 .user-table th {
     width: 20%;
@@ -23,6 +22,30 @@ body table{
     width: 20%;
 }
 
+form {
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
 
-.col-md-1,.col-md-2{ display: inline; }
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    width: 10vh;
+}
+
+.col-md-1, .col-md-2{ display: inline; }
 body p{ display: block; width:100%; }

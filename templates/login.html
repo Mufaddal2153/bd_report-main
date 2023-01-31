@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>base</title>
+<html>
+  <head>
+    <title>Login Page</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
@@ -11,40 +10,30 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- <link rel="stylesheet" type="text/css" href="{# url_for('static', filename='custom.css') #}"> -->
-    <script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-crossorigin="anonymous"></script>
-</head>
-<body>
-    <div class="container">
-        <div class="entry-header">
-            <img src="./images/bohradevelopers.png" />
-        </div>
-        <div class="page flex-row">
-            <div class="navigation col-2">
-                {% block name_email %}
-                    <!-- <h3 class="name"></h3>
-                    <p class="email"></p> -->
-                {% endblock %}
-                <ul class="navigations">
-                    <li class="icon back-btn"><a href="#">Go Back</a></li>
-                    <li class="icon dashboard-btn"><a href="#">Dashboard</a></li>
-                    <li class="icon time-entry-btn"><a href="#">Time Entry</a></li>
-                    <li class="icon log-off-btn"><a href="#">Log Off</a></li>
-                </ul>
-            </div>
-            <div class="dashboard col-10">
-                {% block admin_page %}
-                {% endblock %}
-            </div>
-        </div>
-    </div>
-    <footer>
-        <div class="container">
-            <p>&copy Copyright 2023 Tasker by <a href="https://bohradevelopers.com/">BohraDevelopers.com</a></p>
-        </div>
-    </footer>
-</body>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='custom.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <form class="login_form" role="form" method="post" action="/admin/login" id="login_form">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username">
+      <br>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password">
+      <br><br>
+      <input type="submit" value="Login" id="admin_login_submit">
+    </form> 
+    <!-- <script>
+        $(document).on('click', '#admin_login_submit', function(e) {
+            var baseUrl = window.location.href;
+            axios({
+                method: 'post',
+                url: 
+            })
+        } )
+    </script> -->
+    </body>
+
 </html>
