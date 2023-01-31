@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>add project</title>
+</head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+    <form method="POST" action="add_project">
+        {{ form.hidden_tag() }}
+        <table class="add-project">
+            <tr>
+                <th>Date</th>
+                <td>
+                    <input type="date" name="date">
+                </td>
+            </tr>
+            <tr>
+                <th>Projects</th>
+                <td>
+                    <select class="data_boards" name="data_boards">
+                        {% for key,value in data_boards.items() %}
+                            <option value="{{ key }}">{{value}}</option>
+                        {% endfor %}
+                    </select>
+                    <input class="board_name" type="hidden" name="board_name">
+                </td>
+            </tr>
+            <tr>
+                <th>Lists</th>
+                <td>
+                    <select class="data_list">
+                    </select>
+                    <input class="list_name" type="hidden" name="list_name">
+                </td>
+            </tr>
+            <tr>
+                <th>Cards</th>
+                <td>
+                    <select class="data_card" name="data_card">
+                    </select>
+                    <input class="card_name" type="hidden" name="card_name">
+                </td>
+            </tr>
+            <tr>
+                <th>{{ form.work.label }}</th>
+                <td>
+                    {{ form.work() }}
+                </td>
+            </tr>
+            <tr>
+                <th>{{ form.hours.label }}</th>
+                <td>{{ form.hours() }}</td>
+            </tr>
+            <tr>
+                <th>{{ form.submit() }}</th>
+            </tr>
+        </table>
+    </form>
+</div>
+<div class="data">
+    <table>
+        <thead>
+            <tr>
+                <th>Project</th>            
+                <th>Work</th>            
+                <th>Task</th>       
+                <th>Date</th>       
+                <th>Hours</th>            
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in data %}
+                <tr>
+                    <td>{{ i.project.project_name }}</td>
+                    <td>{{ i.work.work }}</td>
+                    <td>{{ i.card_name }}</td>
+                    <td>{{ i.date }}</td>
+                    <td>{{ i.hours }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+crossorigin="anonymous"></script>
+
+<script src="https://api.trello.com/1/client.js?key=fb7f74a4c2a53d4ef8020c9890ad6411"></script>
+<script>
+    $(document).ready(function(){
+        $(".data_boards").on('change',function(){  
+            var val = $(this).val();
+            $.post('{{ url_for("data_list") }}',
+                {board_id:val},
+                function(data_list){
+                    var data_list = JSON.parse(data_list);
+                    var _opt = "";
+                    var i;
+                    for( i in data_list ){
+                        _opt+=('<option value="'+i+'">'+ data_list[i] +'</option>');
+                    }
+                    $('.data_list').html(_opt);
+                });
+            var hid_brd_name=$('option:selected',this).text();
+            $('.board_name').val(hid_brd_name);
+        });
+
+        $(".data_list").on('change',function(){
+            var list_name = $('option:selected',this).text();
+            var val = $(this).val();
+            $.post('{{ url_for("data_card") }}',
+                {list_id:val},
+                function(data_card){
+                var data_card = JSON.parse(data_card);
+                var _opt = "";
+                var j;
+                for( j in data_card ){
+                    _opt+=('<option value="'+j+'">'+ data_card[j] +'</option>');
+                }
+                $('.data_card').html(_opt);
+            });
+            var hid_list_name = $('option:selected',this).text();
+            $('.list_name').val(hid_list_name);
+        });
+        $(".data_card").on('change',function(){
+            var val = $(this).val();
+            var hid_card_name = $('option:selected',this).text();
+            var hid = $('.card_name').val(hid_card_name);
+        });
+    });
+</script>
+
+{% endblock %}
+</body>
+</html>

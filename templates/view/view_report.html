@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% extends "base.html"%}
+{% block content %}
+<div class="jumbotron">
+<!--    <table class="">-->
+<!--        <thead>-->
+<!--            <tr>-->
+<!--                <th>User</th>-->
+<!--                <th>Project</th>-->
+<!--                <th>Work</th>-->
+<!--                <th>Task</th>-->
+<!--                <th>Date</th>-->
+<!--                <th>Hours</th>-->
+<!--            </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--            {# for i in data #}-->
+<!--                <tr>-->
+<!--                    <td>{# i.user.user #}</td>-->
+<!--                    <td>{# i.project.project_name #}</td>-->
+<!--                    <td>{# i.work.work #}</td>-->
+<!--                    <td>{# i.card_name #}</td>-->
+<!--                    <td>{# i.date #}</td>-->
+<!--                    <td>{# i.hours #}</td>-->
+<!--                </tr>-->
+<!--            {# endfor #}-->
+<!--        </tbody>-->
+<!--    </table>-->
+    <table class="">
+        <thead>
+        <tr>
+                {% for i in work_view %}
+                        <th width="10%">{{i.designation.designation}}</th>
+                        <th width="10%">{{i.work}}</th>
+                        <th width="10%">Hours</th>
+                {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% set total= namespace(value=0) %}
+        <tr>
+                {% for task_id, data in arr.items() %}
+                    <td colspan="3" valign="top">
+                        <table>
+                            {% for i in data %}
+                                <tr>
+                              {% set time = i %}
+                              {% set time_hours=time.hours %}
+                              {% set total.value=time_hours+total.value %}
+                                <td width="9%">{{time.user.user}}</td>
+                                <td width="10%">{{time.card_name}}</td>
+                                <td width="10%">{{time.hours}}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </td>
+
+                {% endfor %}
+         </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+                <td>
+                    {{ total.value }}
+                </td>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+{% endblock %}
+</body>
+</html>

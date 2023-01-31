@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ask Designation</title>
+</head>
+<body>
+	<form method="POST">
+		{{ form.hidden_tag() }}
+		<table class="user-table">
+			<tr>
+				<th>{{ form.designation.label }}</th>
+				<td>{{ form.designation() }}</td>
+			</tr>
+			<tr>
+				<td>{{ form.submit() }}</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>

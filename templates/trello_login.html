@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>trello</title>
+</head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+
+<center>
+    <button class="trello_login">Trello Login</button>
+</center>
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+crossorigin="anonymous"></script>
+
+<script src="https://api.trello.com/1/client.js?key=fb7f74a4c2a53d4ef8020c9890ad6411"></script>
+<script>
+    var authenticationSuccess = function() {
+        var url_trello = document.location.href;
+        var hashStr = window.location.hash;
+        if((hashStr === undefined || hashStr == '')){
+            token = window.localStorage.getItem('trello_token');
+            if(token == '')
+                return;
+        }
+        else if ( url_trello ){
+            var sl = url_trello.split('#');
+            if( sl ){
+                var token = sl[1].replace('token=','');
+                console.log(token);
+            }
+        }
+        $.post('{{ url_for("token_post") }}',
+        {token:token},
+        function(res){
+            var res = JSON.parse(res);
+            if (res.error!==undefined){
+                alert(res.error);
+            }
+            else{
+                document.location.href=res.success;
+            }
+            return;
+        });
+    };
+
+    var authenticationFailure = function() {
+        console.log('Failed authentication');
+    };
+    $(document).ready( function() {
+        $(".trello_login").on('click',function(){
+            window.Trello.authorize({
+                type: 'popup',
+                name: 'BD Report',
+                scope: {
+                read: 'true',
+                write: 'true',
+                account: 'true' },
+                expiration: 'never',
+                success: authenticationSuccess,
+                error: authenticationFailure
+            });
+        });
+    });
+
+</script>
+{% endblock %}
+</body>
+</html>

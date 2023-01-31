@@ -1,0 +1,28 @@
+body{ font-family: Arial, Helvetica; margin: 0; padding: 0; background: #fff; }
+body table{
+    width: 100%;
+
+}
+
+.user-table th {
+    width: 20%;
+}
+.user-table tr td{
+    padding-bottom: 15px;
+}
+.add-project th{
+    width: 20%;
+}
+.add-project tr td{
+    padding-bottom: 15px;
+}
+.add-project-name-table th{
+    width: 20%;
+}
+.add-work-table th{
+    width: 20%;
+}
+
+
+.col-md-1,.col-md-2{ display: inline; }
+body p{ display: block; width:100%; }

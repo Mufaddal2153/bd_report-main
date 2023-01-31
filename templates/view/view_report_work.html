@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Project</th>
+            <th>Task</th>
+            <th>Hours</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% set total = namespace(value=0) %}
+    {% for i in data %}
+    {% set total.value = i.hours+total.value %}
+    <tr>
+        <td>{{ i.user.user }}</td>
+        <td>{{ i.project.project_name }}</td>
+        <td>{{ i.card_name }}</td>
+        <td>{{ i.hours }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+        <td>{{ total.value }}</td>
+    </tr>
+    </tfoot>
+</table>
+{% endblock %}
+</body>
+</html>

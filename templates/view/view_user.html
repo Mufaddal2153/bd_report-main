@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% extends "base.html" %}
+    {% block content %}
+    <div class="jumbotron">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            {{ form.user.label }}{{ form.user() }}<br>
+            Month
+            <input type="date" name="date">
+            {{ form.submit() }}
+        </form>
+    </div>
+    {% endblock %}
+</body>
+</html>
