@@ -9,26 +9,36 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='custom.css') }}">
 </head>
 <body>
-    <div class="main" style="display: flex; height: 100vh;">
-        <div class="navi">
-            <nav class="navbar-dark bg-dark nav flex-column">
-                <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
-                    <a class="nav-item nav-link" href="{{ url_for('create_user') }}">Create User</a>
-                    <a class="nav-item nav-link" href="{{ url_for('create_project') }}">Create Project</a>
-                    <a class="nav-item nav-link" href="{{ url_for('view_project') }}">View User</a>
-                    <a class="nav-item nav-link" href="{{ url_for('view_user') }}">View User</a>
-                    <a class="nav-item nav-link" href="{{ url_for('view_work') }}">View Work</a>
-                </div>
-            </nav>
+    <div class="container">
+        <div class="entry-header">
+            <img src="./images/bohradevelopers.png" />
         </div>
-        <div class="data">
-            {% block content %}
-            {% endblock %}
+        <div class="page flex-row">
+            <div class="navigation col-2">
+                <h3 class="name">Moiz Shabbir Ferozpurwala</h3>
+                <p class="email">moiz.shabbir@10pearls.com</p>
+                <ul class="navigations">
+                    <li class="icon back-btn"><a href="#">Go Back</a></li>
+                    <li class="icon dashboard-btn"><a href="#">Dashboard</a></li>
+                    <li class="icon time-entry-btn"><a href="#">Time Entry</a></li>
+                    <li class="icon log-off-btn"><a href="#">Log Off</a></li>
+                </ul>
+            </div>
+            <div class="dashboard col-10">
+                {% block admin_page %}
+                {% endblock %}
+            </div>
         </div>
     </div>
+    <footer>
+        <div class="container">
+            <p>&copy Copyright 2023 Tasker by <a href="https://bohradevelopers.com/">BohraDevelopers.com</a></p>
+        </div>
+    </footer>
 </body>
 </html>
