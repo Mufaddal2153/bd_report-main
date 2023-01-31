@@ -1,0 +1,44 @@
+body{margin: 0; font-family: 'Roboto'; font-size: 1em; overflow-x: hidden;}
+body .icon:before{display: inline-block; font-style: normal; font-variant: normal; text-rendering: auto; -webkit-font-smoothing: antialiased;}
+body .container{max-width: 1500px; margin: 0 auto;}
+body p{margin: 0 0 1em;}
+body a{text-decoration: none; color: #000;}
+body a:hover{color: #0060AD; transition: 0.4s;}
+body .flex-row{ display: flex; flex-direction: row;}
+body .flex-row .col-1{ flex: 0 0 8.34%; width: 8.34%; padding: 0 0.938em; }
+body .flex-row .col-2{ flex: 0 0 16.67%; width: 16.67%; padding: 0 0.938em; }
+body .flex-row .col-3{ flex: 0 0 25%; width: 25%; padding: 0 0.938em; }
+body .flex-row .col-4{ flex: 0 0 33.33%; width: 33.33%; padding: 0 0.938em; }
+body .flex-row .col-5{ flex: 0 0 41.66%; width: 41.66%; padding: 0 0.938em; }
+body .flex-row .col-6{ flex: 0 0 50%; width: 50%; padding: 0 0.938em; }
+body .flex-row .col-7{ flex: 0 0 58.33%; width: 58.33%; padding: 0 0.938em; }
+body .flex-row .col-8{ flex: 0 0 66.66%; width: 66.66%; padding: 0 0.938em; }
+body .flex-row .col-9{ flex: 0 0 75%; width: 75%; padding: 0 0.938em; }
+body .flex-row .col-10{ flex: 0 0 83.33%; width: 83.33%; padding: 0 0.938em; }
+body .flex-row .col-11{ flex: 0 0 91.66%; width: 91.66%; padding: 0 0.938em; }
+body .flex-row .col-12{ flex: 0 0 100%; width: 100%; padding: 0 0.938em; }
+body .entry-header{background: #0060AD;}
+body .entry-header img{filter: brightness(0) invert(1);}
+body .page .navigation{background: #333333; color: #fff; text-align: center;}
+body .page .navigation p.email{padding: 1.5em 1em; border-bottom: 1px solid #fff;}
+body .page .navigation ul.navigations{list-style: none;}
+body .page .navigation ul.navigations li{padding: 2em 1em; font-size: 1.5em;}
+body .page .navigation ul.navigations li a{color: #fff;}
+body .page .navigation ul.navigations li.back-btn:before{font-family: "FontAwesome"; font-weight: 400; content: "\f060"; margin-right: 10px;}
+body .page .navigation ul.navigations li.dashboard-btn:before{font-family: "FontAwesome"; font-weight: 400; content: "\f015"; margin-right: 10px;}
+body .page .navigation ul.navigations li.time-entry-btn:before{font-family: "FontAwesome"; font-weight: 400; content: "\f0b1"; margin-right: 10px;}
+body .page .navigation ul.navigations li.log-off-btn:before{font-family: "FontAwesome"; font-weight: 400; content: "\f011"; margin-right: 10px;}
+body .page .navigation p.email, body .page .navigation p.version{color: #5C6063;}
+body .page .dashboard{padding: 1em;}
+body .page .dashboard .top-sec{display: flex; align-items: center;}
+body .page .dashboard .top-sec select{width: 50%;}
+body .page .dashboard .top-sec a{width: 25%; padding: 0.5em 2em; background: #E63144; color: #fff; border: none;}
+body .page .dashboard .header{background: #F7F7F7; text-align: center; padding: 1em 0; margin-top: 1em;}
+
+
+
+
+
+
+body footer{background: #efefef; padding: 1em 0.5em;}
+body footer p{margin: 0;}
