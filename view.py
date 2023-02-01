@@ -1,10 +1,10 @@
 import requests
 import json
 from flask import render_template, redirect, url_for, request, json, session
-from sqlalchemy import extract
+# from sqlalchemy import extract
 # from model import Project, Designation, Task, User, TimeSheet
-from forms import AddProject, ViewProject, ViewUser, ViewWork, AskDesignation, AddUser, AddWork
-from config import bd_report
+# from forms import AddProject, ViewProject, ViewUser, ViewWork, AskDesignation, AddUser, AddWork
+from config import bd_report, mysql
 from datetime import datetime
 
 #################### UPDATED TO CHECK PULL PUSH GIT ###############
@@ -20,10 +20,20 @@ def index():
 @bd_report.route('/admin/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
+        cur = mysql.connection.cursor()
+
         userN = request.form['username']
         passW = request.form['password']
-        if userN == 'admin' and passW == 'admin':
-            return render_template('add/add_user.html')
+
+        cur.execute("Select username, password from admin where username=%s and password=%s", (userN, passW))
+        mysql.connection.commit()
+        res = cur.fetchall()
+        if res:
+            session['uName'] = userN
+            return render_template('welcome.html', uName = userN) 
+        else:
+            print('not here')
+            return render_template('login.html')
     return render_template('login.html')
 
 @bd_report.route('/home')
@@ -64,26 +74,27 @@ def token_post():
 
     return render_template('trello_login.html')
 
-@bd_report.route('/ask_designation',methods=['GET','POST'])
-def ask_designation():
-    form = AskDesignation()
-    if form.validate_on_submit():
-        designation = form.designation.data
-        designation_id = designation.id
-        token = request.args.get('token')
-        trello_id = request.args.get('trello_id')
-        user = request.args.get('user')
-        insert = User(trello_id,token,user,designation_id)
-        db.session.add(insert)
-        db.session.commit()
-
-        session['token'] = token
-        session['user'] = user
-        session['trello_id'] = trello_id
-        session['user_id'] = insert.id
-        session['designation_id'] = designation_id
-        return redirect(url_for('add_project'))
-    return render_template('add/ask_designation.html',form=form)
+@bd_report.route('/admin/add_designation',methods=['POST'])
+def add_designation():
+    # form = AskDesignation()
+    print("here")
+    if request.method == 'POST':
+        # desi = request.form.get('designation')
+        desi = request.get_json()['designation'].lower()
+        print(desi)
+        cur = mysql.connection.cursor()
+        cur.execute("select p.designation from designation p where p.designation=%s", (desi,))
+        mysql.connection.commit()
+        res = cur.fetchall()
+        msg = {}
+        if res:
+            msg['error'] = "Designation Exists"
+        else:
+            cur.execute("insert into designation (designation) values (%s)", (desi,))
+            mysql.connection.commit()
+            msg['success'] = 'Desgination Added'
+        return json.dumps(msg)
+    return ""
 
 
 @bd_report.route('/add_project',methods=['GET','POST'])
@@ -140,25 +151,35 @@ def add_project():
 
     return render_template('add/add_project.html',form=form,data_boards=data_boards)
 
-@bd_report.route('/add_user',methods=['GET','POST'])
+@bd_report.route('/admin/add_user',methods=['GET','POST'])
 def add_user():
-    form = AddUser()
-    if form.validate_on_submit():
-        user = form.user.data
-        designation = form.designation.data
-        get_designation = Designation.query.filter_by(designation=designation).first()
-        if get_designation == None:
-            add_designation = Designation(designation)
-            db.session.add(add_designation)
-            db.session.commit()
-            designation_id = add_designation.id
-        else:
-            designation_id = get_designation.id
-        add_user = User(user, designation_id)
-        db.session.add(add_user)
-        db.session.commit()
-        return redirect(url_for('index'))
-    return render_template('add/add_user.html',form=form)
+    # form = AddUser()
+    if session['uName']:
+        
+        if request.method == 'POST':
+            print(request.form)
+            # user = form.user.data
+            # designation = form.designation.data
+            # get_designation = Designation.query.filter_by(designation=designation).first()
+            # if get_designation == None:
+            #     add_designation = Designation(designation)
+            #     db.session.add(add_designation)
+            #     db.session.commit()
+            #     designation_id = add_designation.id
+            # else:
+            #     designation_id = get_designation.id
+            # add_user = User(user, designation_id)
+            # db.session.add(add_user)
+            # db.session.commit()
+            # return redirect(url_for('index'))
+
+        cur = mysql.connection.cursor()
+        cur.execute('select * from designation')
+        mysql.connection.commit()
+        desi = cur.fetchall()
+        return render_template('add/add_user.html', uName = session['uName'], designation = desi)
+    else:
+        return render_template('login.html')
 
 
 @bd_report.route('/data_list',methods=['GET','POST'])
@@ -208,47 +229,62 @@ def data_card():
     data_card = json.dumps(data_card)
     return data_card
 
-
 @bd_report.route('/view_report',methods=['GET','POST'])
 def view_project():
-    form = ViewProject()
-    if form.validate_on_submit():
-        project_name = form.project_name.data
-        date = request.form.get("date")
-        date = datetime.strptime(date,'%Y-%m-%d')
-        month = date.month
-        user = session.get('user')
-        data = TimeSheet.query.filter((extract('month',TimeSheet.date)==month),TimeSheet.project==project_name).all()
-        work_view = Task.query.all()
-        arr = {}
-        for i in work_view:
-            arr[i.id] = [j for j in data if j.work.designation_id == i.designation_id and j.task_id == i.id]
-        return render_template("view/view_report.html",work_view=work_view,arr=arr)
-    return render_template('view/view_project.html',form=form)
+    pass
+
+# @bd_report.route('/view_report',methods=['GET','POST'])
+# def view_project():
+#     form = ViewProject()
+#     if form.validate_on_submit():
+#         project_name = form.project_name.data
+#         date = request.form.get("date")
+#         date = datetime.strptime(date,'%Y-%m-%d')
+#         month = date.month
+#         user = session.get('user')
+#         data = TimeSheet.query.filter((extract('month',TimeSheet.date)==month),TimeSheet.project==project_name).all()
+#         work_view = Task.query.all()
+#         arr = {}
+#         for i in work_view:
+#             arr[i.id] = [j for j in data if j.work.designation_id == i.designation_id and j.task_id == i.id]
+#         return render_template("view/view_report.html",work_view=work_view,arr=arr)
+#     return render_template('view/view_project.html',form=form)
+
 
 @bd_report.route('/view_user',methods=['GET','POST'])
 def view_user():
-    form = ViewUser()
-    if form.validate_on_submit():
-        user = form.user.data
-        date = request.form.get("date")
-        date = datetime.strptime(date,'%Y-%m-%d')
-        month = date.month
-        data = TimeSheet.query.filter(extract("month",TimeSheet.date)==month,TimeSheet.user==user).all()
-        return render_template("view/view_report_user.html",data=data)
-    return render_template('view/view_user.html', form=form)
+    pass
+
+
+# @bd_report.route('/view_user',methods=['GET','POST'])
+# def view_user():
+#     form = ViewUser()
+#     if form.validate_on_submit():
+#         user = form.user.data
+#         date = request.form.get("date")
+#         date = datetime.strptime (date,'%Y-%m-%d')
+#         month = date.month
+#         data = TimeSheet.query.filter(extract("month",TimeSheet.date)==month,TimeSheet.user==user).all()
+#         return render_template("view/view_report_user.html",data=data)
+#     return render_template('view/view_user.html', form=form)
+
 
 @bd_report.route('/view_work',methods=['GET','POST'])
 def view_work():
-    form = ViewWork()
-    if form.validate_on_submit():
-        work = form.work.data
-        date = request.form.get("date")
-        date = datetime.strptime(date,'%Y-%m-%d')
-        month = date.month
-        data = TimeSheet.query.filter(extract("month",TimeSheet.date)==month,TimeSheet.work==work).all()
-        return render_template("view/view_report_work.html",data=data)
-    return render_template("view/view_work.html",form=form)
+    pass
+
+
+# @bd_report.route('/view_work',methods=['GET','POST'])
+# def view_work():
+#     form = ViewWork()
+#     if form.validate_on_submit():
+#         work = form.work.data
+#         date = request.form.get("date")
+#         date = datetime.strptime(date,'%Y-%m-%d')
+#         month = date.month
+#         data = TimeSheet.query.filter(extract("month",TimeSheet.date)==month,TimeSheet.work==work).all()
+#         return render_template("view/view_report_work.html",data=data)
+#     return render_template("view/view_work.html",form=form)
 
 if __name__ == '__main__':
     bd_report.run(debug=True)
