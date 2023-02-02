@@ -1,6 +1,6 @@
 import requests
 import json
-from flask import render_template, redirect, url_for, request, json, session
+from flask import render_template, redirect, url_for, request, session, jsonify
 # from sqlalchemy import extract
 # from model import Project, Designation, Task, User, TimeSheet
 # from forms import AddProject, ViewProject, ViewUser, ViewWork, AskDesignation, AddUser, AddWork
@@ -93,87 +93,71 @@ def add_designation():
             cur.execute("insert into designation (designation) values (%s)", (desi,))
             mysql.connection.commit()
             msg['success'] = 'Desgination Added'
+            cur.execute("select p.designation from designation p where p.designation=%s", (desi,))
+            mysql.connection.commit()
+            ret = cur.fetchall()[0]
+            msg['designation_id'] = ret
+            
+            
         return json.dumps(msg)
     return ""
 
 
-@bd_report.route('/add_project',methods=['GET','POST'])
+@bd_report.route('/admin/add_project',methods=['GET','POST'])
 def add_project():
-    form = AddProject()
+    # form = AddProject()
 
-    trello_id = session.get('trello_id')
-    token = session.get('token')
+    if session['uName']:
+        cur = mysql.connection.cursor()
+        if request.method == 'POST':
+            res_dict = {}
+            get_data = request.get_json()
+            if get_data['project']:
+                data = get_data['project'].lower()
+                cur.execute("select * from project where project_name=%s", (data, ))
+                mysql.connection.commit()
+                ret = cur.fetchall()
+                if ret:
+                    res_dict['msg'] = "Project Already Exists"
+                else:
+                    cur.execute("insert into project (project_name) values (%s)", (data,))
+                    mysql.connection.commit()
+                    res_dict['msg'] = "Project Updated"
 
+                return jsonify(res_dict)
 
-    base_url = 'https://trello.com/1/'
-    board_url = base_url+'members/{}/boards'.format(trello_id)
-
-    params_key_and_token = {'key': key, 'token': token}
-
-    response = requests.get(board_url, params=params_key_and_token)
-    data = list(response.json())
-    data_boards = {j['id']:j['name'] for j in data}
-
-    if form.validate_on_submit():
-        board_id = request.form.get("data_boards")
-        project_name = request.form.get("board_name")
-
-        list_id = request.form.get("data_list")
-        list_name = request.form.get("list_name")
-
-        card_id = request.form.get("data_card")
-        card_name = request.form.get("card_name")
-
-        date = request.form["date"]
-        work = form.work.data
-        hours = form.hours.data
-        date = datetime.strptime(date,'%Y-%m-%d')
-
-        work_id = work.id
-        user_id = session.get('user_id')
-        designation_id = session.get('designation_id')
-
-        get_board_id = Project.query.filter_by(board_id=board_id).first()
-        if get_board_id == None:
-            add_board = Project(project_name,board_id)
-            db.session.add(add_board)
-            db.session.commit()
-            project_id = add_board.id
-        else:
-            project_id = get_board_id.id
-        add_data = TimeSheet(user_id,project_id,work_id,card_id,card_name,date,hours)
-        db.session.add(add_data)
-        db.session.commit()
-
-        data = TimeSheet.query.order_by(TimeSheet.id.desc()).limit(10).all()
-
-        return render_template('add/add_project.html',form=form,data=data,data_boards=data_boards)
-
-    return render_template('add/add_project.html',form=form,data_boards=data_boards)
+        cur.execute("select * from project")
+        mysql.connection.commit()
+        res = cur.fetchall()
+        return render_template('add/add_project.html', uName = session['uName'], projects=res)
+    else:
+        return render_template('login.html')
 
 @bd_report.route('/admin/add_user',methods=['GET','POST'])
 def add_user():
-    # form = AddUser()
     if session['uName']:
-        
-        if request.method == 'POST':
-            print(request.form)
-            # user = form.user.data
-            # designation = form.designation.data
-            # get_designation = Designation.query.filter_by(designation=designation).first()
-            # if get_designation == None:
-            #     add_designation = Designation(designation)
-            #     db.session.add(add_designation)
-            #     db.session.commit()
-            #     designation_id = add_designation.id
-            # else:
-            #     designation_id = get_designation.id
-            # add_user = User(user, designation_id)
-            # db.session.add(add_user)
-            # db.session.commit()
-            # return redirect(url_for('index'))
-
         cur = mysql.connection.cursor()
+        msg = {}
+        if request.method == 'POST':
+            res_dict = {}
+            get_data = request.get_json()
+            for i in get_data:
+                if i['value']:
+                    res_dict[i['name']] = i['value']
+            
+            cur.execute('select username, password from user where username = %s', (res_dict['new_user'], ))
+            mysql.connection.commit()
+            user = cur.fetchall()
+            if user:
+                msg['msg'] = "Username Already Exists"
+                return jsonify(msg)
+            
+            cur.execute("insert into user (username, password, designation_id) values (%s, %s, %s)", (res_dict['new_user'], res_dict['new_user_pass'], res_dict['designation']))
+            mysql.connection.commit()
+            msg['msg'] = f"{res_dict['new_user']} User Added Successfully"
+            print(msg)
+            return jsonify(msg)
+
         cur.execute('select * from designation')
         mysql.connection.commit()
         desi = cur.fetchall()
