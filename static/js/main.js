@@ -96,3 +96,28 @@ $('#user-table #submit').on('click', function(e){
     })
 })
 
+$('#add-work-table #submit').on('click', function(e){
+    e.preventDefault();
+
+    let data = $('#add_work_form').serializeArray();
+    console.log(data);
+    // return;
+    let baseUrl = new URL(window.location.href);
+    baseUrl = `${baseUrl.protocol}//${baseUrl.hostname}:${baseUrl.port}`;
+    axios({
+        method: 'POST',
+        url: baseUrl + '/admin/add_work',
+        data: data
+    }).then(res => {
+
+        res = JSON.parse(JSON.stringify(res));
+        if (res['data']['msg']) {
+            alert(res['data']['msg']);
+        }
+
+    }).catch(err =>{
+        alert("ERROR");
+        console.log(err);
+    })
+})
+    

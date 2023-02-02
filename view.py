@@ -129,6 +129,7 @@ def add_project():
         cur.execute("select * from project")
         mysql.connection.commit()
         res = cur.fetchall()
+        print(res)
         return render_template('add/add_project.html', uName = session['uName'], projects=res)
     else:
         return render_template('login.html')
@@ -183,18 +184,33 @@ def data_list():
 
     return data_list
 
-@bd_report.route('/hello',methods=['GET','POST'])
+@bd_report.route('/admin/add_work',methods=['GET','POST'])
 def add_work():
-    form = AddWork()
-    if form.validate_on_submit():
-        work = form.work.data
-        designation = form.designation.data
-        designation_id = designation.id
-        add_work = Task(work,designation_id)
-        db.session.add(add_work)
-        db.session.commit()
-        return redirect(url_for('index'))
-    return render_template('add/add_work.html',form=form)
+    if session['uName']:
+        
+        cur = mysql.connection.cursor()
+        if request.method == 'POST':
+            res_dict = {}
+            print('here')
+            get_data = request.get_json()
+            for i in get_data:
+                res_dict[i['name']] = i['value']
+            
+            cur.execute("insert into work (work, project_id, designation_id) values (%s, %s, %s)", (res_dict['work'], res_dict['project'], res_dict['designation']))
+            mysql.connection.commit()
+
+            return jsonify({'msg': 'Work Added Successfully'})
+        cur.execute("select * from project")
+        mysql.connection.commit()
+        project = cur.fetchall()
+
+        cur.execute('select * from designation')
+        mysql.connection.commit()
+        designation = cur.fetchall()
+
+        return render_template('add/add_work.html', project=project, designation=designation)
+    else:
+        return render_template('login.html')
 
 @bd_report.route('/data_card',methods=['GET','POST'])
 def data_card():

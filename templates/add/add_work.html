@@ -5,26 +5,53 @@
     <title>Add Work</title>
 </head>
 <body>
-    {% extends "base.html" %}
-    {% block content %}
+    {% extends "admin_base.html" %}
+    {% block name_email %}
+        <h3 class="name">{{ uName }}</h3>
+    {% endblock %}
+    {% block admin_page %}
     <div class="jumbotron">
-    <form method="POST">
-        <table class="add-work-table">
-        {{ form.hidden_tag() }}
-            <tr>
-                <th>{{ form.work.label }}</th>
-                <td>{{ form.work() }}</td>
-            </tr>
-            <tr>
-                <th>{{ form.designation.label }}</th>
-                <td>{{ form.designation() }}</td>
-            </tr>
-            <tr>
-                <th>{{ form.submit() }}</th>
-            </tr>
-        </table>
-    </form>
+        <form method="post" class="add_work_form" role="form" id="add_work_form" >
+            <!-- {# form.hidden_tag() #} -->
+            <table class="add-work-table" id="add-work-table">
+                <tr>
+                    <th><label for="project">Project: </label></th>
+                    <td>
+                        <select class="form-control selectpicker" id="select1" name="project">
+                            <option value="">None</option>
+                            {% for i in project %}
+                                <option value="{{ i[0] }}">{{ i[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="designation">Designation: </label></th>
+                    <td>
+                        <select class="form-control selectpicker" id="select1" name="designation">
+                            <option value="">None</option>
+                            {% for i in designation %}
+                                <option value="{{ i[0] }}">{{ i[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="work">Work: </label></th>
+                    <td>
+                        <input class="form-control-lg work" type="text" id="work" name="work">
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="submit" name="submit" id="submit"></td>
+                </tr>
+            </table>
+        </form>
     </div>
+
+    {% endblock %}
+    {% block sel_js %}
+    <script src="{{ url_for('static', filename='js') }}/main.js"></script>
     {% endblock %}
 
 </body>

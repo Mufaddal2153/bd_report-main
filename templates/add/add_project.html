@@ -22,7 +22,7 @@
                 <td>
                     <select class="form-control selectpicker" id="select1" name="project">
                         <option value="">None</option>
-                        {% for i in project %}
+                        {% for i in projects %}
                             <option value="{{ i[0] }}">{{ i[1] }}</option>
                         {% endfor %}
                     </select>
