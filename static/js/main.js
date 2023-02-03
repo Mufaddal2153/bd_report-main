@@ -114,10 +114,40 @@ $('#add-work-table #submit').on('click', function(e){
         if (res['data']['msg']) {
             alert(res['data']['msg']);
         }
-
+        window.location.reload(true);
     }).catch(err =>{
         alert("ERROR");
         console.log(err);
     })
 })
-    
+
+$('#month-year-sel-table #submit').on('click', function(e) {
+    e.preventDefault()
+
+    let data = $('#month_year_form').serializeArray();
+    // console.log(data)
+    let baseUrl = new URL(window.location.href);
+    baseUrl = `${baseUrl.protocol}//${baseUrl.hostname}:${baseUrl.port}`;
+    axios({
+        method: 'POST',
+        url: baseUrl + '/hours_page',
+        data: data
+    }).then(res => {
+
+        res = JSON.parse(JSON.stringify(res));
+        if (res['data']) {
+            let tDate = new Date().getDate();
+            console.log(tDate)
+            console.log(res['data']);
+            content = []
+            content.push("<table class='table table-bordered'>");
+            for (const [key, value] of Object.entries(res['data'])) {
+                console.log(key, value);
+                
+              }          
+        }
+    }).catch(err =>{
+        alert("ERROR");
+        console.log(err);
+    })
+})

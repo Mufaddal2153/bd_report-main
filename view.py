@@ -1,5 +1,4 @@
-import requests
-import json
+import requests, json, calendar
 from flask import render_template, redirect, url_for, request, session, jsonify
 # from sqlalchemy import extract
 # from model import Project, Designation, Task, User, TimeSheet
@@ -14,8 +13,28 @@ from datetime import datetime
 to_reload = False
 
 @bd_report.route('/',methods=['GET','POST'])
+@bd_report.route('/login',methods=['GET','POST'])
 def index():
-    return render_template('trello_login.html')
+
+    if request.method == 'POST':
+        cur = mysql.connection.cursor()
+
+        userN = request.form['username']
+        passW = request.form['password']
+
+        cur.execute("Select username, password from user where username=%s and password=%s", (userN, passW))
+        mysql.connection.commit()
+        res = cur.fetchall()
+
+        if res:
+            session['userN'] = userN
+            return render_template('welcome.html', uName = userN) 
+        else:
+            print('not here')
+            return render_template('login.html')
+
+
+    return render_template('login.html')
 
 @bd_report.route('/admin/login', methods=['GET','POST'])
 def login():
@@ -30,49 +49,16 @@ def login():
         res = cur.fetchall()
         if res:
             session['uName'] = userN
-            return render_template('welcome.html', uName = userN) 
+            return render_template('welcome.html', uName = userN, isAdmin=1) 
         else:
             print('not here')
-            return render_template('login.html')
-    return render_template('login.html')
+            return render_template('admin_login.html')
+    return render_template('admin_login.html')
 
 @bd_report.route('/home')
 def home():
     return render_template("home.html")
 
-@bd_report.route('/token_post',methods=["GET",'POST'])
-def token_post():
-    res = {}
-    if request.method == "POST" or request.method == "GET":
-        token = request.form['token']
-        base_url = 'https://trello.com/1/'
-        mem_url = base_url + 'members/me'
-        params_key_and_token = {'key': key, 'token': token}
-        response = requests.get(mem_url, params=params_key_and_token)
-        response = response.json()
-        trello_id = response['id']
-        user = response['username']
-        session['token'] = token
-        if trello_id == None:
-            res['error'] = "/index"
-        elif trello_id:
-            get_user = User.query.filter_by(trello_id=trello_id).first()
-            if get_user:
-                res['success']='/add_project'
-                token=token
-                db.session.commit()
-            else:
-                res['trello_id']=trello_id
-                res['user']=user
-                token=token
-                res['token']=token
-                res['success'] ='/ask_designation'+'?'+'trello_id='+res['trello_id']+'&'+'user='+res['user']+'&'+'token='+res['token']
-
-        res = json.dumps(res)
-        return res
-
-
-    return render_template('trello_login.html')
 
 @bd_report.route('/admin/add_designation',methods=['POST'])
 def add_designation():
@@ -130,9 +116,9 @@ def add_project():
         mysql.connection.commit()
         res = cur.fetchall()
         print(res)
-        return render_template('add/add_project.html', uName = session['uName'], projects=res)
+        return render_template('add/add_project.html', uName = session['uName'], projects=res, isAdmin=1)
     else:
-        return render_template('login.html')
+        return render_template('admin_login.html')
 
 @bd_report.route('/admin/add_user',methods=['GET','POST'])
 def add_user():
@@ -162,7 +148,44 @@ def add_user():
         cur.execute('select * from designation')
         mysql.connection.commit()
         desi = cur.fetchall()
-        return render_template('add/add_user.html', uName = session['uName'], designation = desi)
+        return render_template('add/add_user.html', uName = session['uName'], designation = desi, isAdmin=1)
+    else:
+        return render_template('admin_login.html')
+
+
+@bd_report.route('/hours_page', methods=['GET', 'POST'])
+def hours_page():
+    if session['userN']:
+        cur = mysql.connection.cursor()
+
+        if request.method == 'POST':
+            res_dict = {}
+            data = request.get_json()
+            for i in data:
+                res_dict[i['name']] = int(i['value'])
+            
+            obj = calendar.Calendar()
+            main_list = list(obj.itermonthdates(res_dict['year'], res_dict['month']))
+            days = {}
+
+            for i in main_list:
+                if int(i.strftime("%m")) == res_dict['month']:
+                    days[int(i.strftime("%d"))] = i.strftime("%A")
+            
+            return json.dumps(days)
+            
+
+
+        years_back = 3
+        year = datetime.today().year - years_back
+        YEARS = [year + i for i in range(years_back+15)]
+        print(YEARS)
+        temp = calendar.month_name
+        
+        month_names = [(i, temp[i]) for i in range(len(temp))]
+
+        return render_template('add/add_hours.html', uName = session['uName'], month= month_names, years = YEARS)
+
     else:
         return render_template('login.html')
 
@@ -191,15 +214,14 @@ def add_work():
         cur = mysql.connection.cursor()
         if request.method == 'POST':
             res_dict = {}
-            print('here')
             get_data = request.get_json()
             for i in get_data:
                 res_dict[i['name']] = i['value']
             
-            cur.execute("insert into work (work, project_id, designation_id) values (%s, %s, %s)", (res_dict['work'], res_dict['project'], res_dict['designation']))
+            cur.execute("insert into task (work, project_id, designation_id) values (%s, %s, %s)", (res_dict['work'], res_dict['project'], res_dict['designation']))
             mysql.connection.commit()
-
             return jsonify({'msg': 'Work Added Successfully'})
+
         cur.execute("select * from project")
         mysql.connection.commit()
         project = cur.fetchall()
@@ -208,9 +230,9 @@ def add_work():
         mysql.connection.commit()
         designation = cur.fetchall()
 
-        return render_template('add/add_work.html', project=project, designation=designation)
+        return render_template('add/add_work.html', project=project, designation=designation, isAdmin=1)
     else:
-        return render_template('login.html')
+        return render_template('admin_login.html')
 
 @bd_report.route('/data_card',methods=['GET','POST'])
 def data_card():

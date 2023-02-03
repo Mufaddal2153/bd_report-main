@@ -6,59 +6,61 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    {% extends "admin_base.html" %}
-    {% block name_email %}
-        <h3 class="name">{{ uName }}</h3>
-    {% endblock %}
-    {% block admin_page %}
-    {% if added_user %}
-    <div class="uName">
-        <h3>{{ added_user }} added Successfully</h3>
-    </div>
-    {% endif %}
-    <div class="jumbotron">
-        <form method="post" class="add_user_form" role="form" id="add_user_form" >
-            <!-- {# form.hidden_tag() #} -->
-            <table class="user-table" id="user-table">
-                <tr>
-                    <th> <label for="new_user">UserName: </label> </th>
-                    <td><input type="text" name="new_user" id="new_user"></td>
-                </tr>
-                <tr>
-                    <th> <label for="new_user_pass">Password: </label> </th>
-                    <td><input type="password" name="new_user_pass"></td>
-                </tr>
-                <tr>
-                    <th><label for="designation">Designation: </label></th>
-                    <td>
-                        <select class="form-control selectpicker" id="select1" name="designation">
-                            <option value="">None</option>
-                            {% for i in designation %}
-                                <option value="{{ i[0] }}">{{ i[1] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                    <td class="add_button">
-                        <a href="#ex1" rel="modal:open"></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><input type="submit" name="submit" id="submit"></td>
-                </tr>
-            </table>
-            <div id="ex1" class="modal">
-                <label for="add_designation">Add Designation: </label><br/>
-                <input type="text" name="add_designation" id="add_text">
-                <br>
-                <button id="add_designation" >Add</button>
-                <a href="#" rel="modal:close">Close</a>
-            </div>
-        </form>
-    </div>
+    {% if isAdmin %}
+        {% extends "admin_base.html" %}
+        {% block name_email %}
+            <h3 class="name">{{ uName }}</h3>
+        {% endblock %}
+        {% block admin_page %}
+        {% if added_user %}
+        <div class="uName">
+            <h3>{{ added_user }} added Successfully</h3>
+        </div>
+        {% endif %}
+        <div class="jumbotron">
+            <form method="post" class="add_user_form" role="form" id="add_user_form" >
+                <!-- {# form.hidden_tag() #} -->
+                <table class="user-table" id="user-table">
+                    <tr>
+                        <th> <label for="new_user">UserName: </label> </th>
+                        <td><input type="text" name="new_user" id="new_user"></td>
+                    </tr>
+                    <tr>
+                        <th> <label for="new_user_pass">Password: </label> </th>
+                        <td><input type="password" name="new_user_pass"></td>
+                    </tr>
+                    <tr>
+                        <th><label for="designation">Designation: </label></th>
+                        <td>
+                            <select class="form-control selectpicker" id="select1" name="designation">
+                                <option value="">None</option>
+                                {% for i in designation %}
+                                    <option value="{{ i[0] }}">{{ i[1] }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td class="add_button">
+                            <a href="#ex1" rel="modal:open"></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="submit" name="submit" id="submit"></td>
+                    </tr>
+                </table>
+                <div id="ex1" class="modal">
+                    <label for="add_designation">Add Designation: </label><br/>
+                    <input type="text" name="add_designation" id="add_text">
+                    <br>
+                    <button id="add_designation" >Add</button>
+                    <a href="#" rel="modal:close">Close</a>
+                </div>
+            </form>
+        </div>
 
-    {% endblock %}
-    {% block sel_js %}
-    <script src="{{ url_for('static', filename='js') }}/main.js"></script>
-    {% endblock %}
+        {% endblock %}
+        {% block sel_js %}
+        <script src="{{ url_for('static', filename='js') }}/main.js"></script>
+        {% endblock %}
+    {% endif %}
 </body>
 </html>

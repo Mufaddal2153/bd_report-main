@@ -6,45 +6,47 @@
 </head>
 <body>
 {% extends "admin_base.html" %}
-{% block name_email %}
-    <h3 class="name">{{ uName }}</h3>
-{% endblock %}
+{% if isAdmin %}
+    {% block name_email %}
+        <h3 class="name">{{ uName }}</h3>
+    {% endblock %}
 
-{% block admin_page %}
-<div>
-    <h1>Add Project</h1>
-</div>
-<div class="jumbotron">
-    <form method="POST" action="">
-        <table class="project-table" id="project-table">
-            <tr>
-                <th><label for="Project">Project: </label></th>
-                <td>
-                    <select class="form-control selectpicker" id="select1" name="project">
-                        <option value="">None</option>
-                        {% for i in projects %}
-                            <option value="{{ i[0] }}">{{ i[1] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-                <td class="add_button">
-                    <a href="#ex1" rel="modal:open"></a>
-                </td>
-            </tr>
-            <tr><td><input type="submit" name="submit" id="submit"></td></tr>
-        </table>
-        <div id="ex1" class="modal">
-            <label for="add_project">Add Project: </label><br/>
-            <input type="text" name="add_project" id="add_text">
-            <br>
-            <button id="add_project" >Add</button>
-            <a href="#" rel="modal:close">Close</a>
-        </div>
-    </form>
-</div>
-{% endblock %}
-{% block sel_js %}
-    <script src="{{ url_for('static', filename='js') }}/main.js"></script>
-{% endblock %}
+    {% block admin_page %}
+    <div>
+        <h1>Add Project</h1>
+    </div>
+    <div class="jumbotron">
+        <form method="POST" action="">
+            <table class="project-table" id="project-table">
+                <tr>
+                    <th><label for="Project">Project: </label></th>
+                    <td>
+                        <select class="form-control selectpicker" id="select1" name="project">
+                            <option value="">None</option>
+                            {% for i in projects %}
+                                <option value="{{ i[0] }}">{{ i[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td class="add_button">
+                        <a href="#ex1" rel="modal:open"></a>
+                    </td>
+                </tr>
+                <tr><td><input type="submit" name="submit" id="submit"></td></tr>
+            </table>
+            <div id="ex1" class="modal">
+                <label for="add_project">Add Project: </label><br/>
+                <input type="text" name="add_project" id="add_text">
+                <br>
+                <button id="add_project" >Add</button>
+                <a href="#" rel="modal:close">Close</a>
+            </div>
+        </form>
+    </div>
+    {% endblock %}
+    {% block sel_js %}
+        <script src="{{ url_for('static', filename='js') }}/main.js"></script>
+    {% endblock %}
+{% endif %}
 </body>
 </html>

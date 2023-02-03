@@ -5,6 +5,7 @@
     <title>Add Work</title>
 </head>
 <body>
+{% if isAdmin %}
     {% extends "admin_base.html" %}
     {% block name_email %}
         <h3 class="name">{{ uName }}</h3>
@@ -53,6 +54,6 @@
     {% block sel_js %}
     <script src="{{ url_for('static', filename='js') }}/main.js"></script>
     {% endblock %}
-
+{% endif %}
 </body>
 </html>

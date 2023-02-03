@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>add project</title>
+</head>
+<body>
+{% extends "base.html" %}
+
+{% block name_email %}
+    <h3 class="name">{{ uName }}</h3>
+{% endblock %}
+
+{% block admin_page %}
+<div>
+    <h1>Add Hours</h1>
+</div>
+<div class="jumbotron">
+    <form method="POST" action="" class="month_year_form" role="form" id="month_year_form">
+        <table class="month-year-sel-table" id="month-year-sel-table">
+            <tr>
+                <th>
+                    <label for="month">Month</label>
+                </th>
+                <td>
+                    <select class="form-control selectpicker" id="select1" name="month">
+                        {% for i in month %}
+                            <option value="{{ i[0] }}">{{ i[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label for="year">Year</label>
+                </th>
+                <td>
+                    <select class="form-control selectpicker" id="select2" name="year">
+                        <option value="">None</option>
+                        {% for i in years %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr><td><input type="submit" name="submit" id="submit"></td></tr>
+        </table>
+    </form>
+</div>
+{% endblock %}
+{% block sel_js %}
+    <script src="{{ url_for('static', filename='js') }}/main.js"></script>
+{% endblock %}
+</body>
+</html>

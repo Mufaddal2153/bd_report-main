@@ -5,7 +5,11 @@
     <title>Home</title>
 </head>
 <body>
-    {% extends "admin_base.html" %}
+    {% if isAdmin %}
+        {% extends "admin_base.html" %}
+    {% else %}
+        {% extends "base.html" %}
+    {% endif %}
     {% block name_email %}
         <h3 class="name">{{ uName }}</h3>
     {% endblock %}
