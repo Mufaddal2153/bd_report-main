@@ -143,7 +143,7 @@ $('#month-year-sel-table #submit').on('click', function(e) {
             content.push("<table class='table table-bordered'>");
             for (const [key, value] of Object.entries(res['data'])) {
                 console.log(key, value);
-                
+                row = `<tr><td><span class="date">${key}</span><span class="day">${value}</span></td></tr>`
               }          
         }
     }).catch(err =>{
