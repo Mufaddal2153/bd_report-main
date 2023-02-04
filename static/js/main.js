@@ -137,14 +137,37 @@ $('#month-year-sel-table #submit').on('click', function(e) {
         res = JSON.parse(JSON.stringify(res));
         if (res['data']) {
             let tDate = new Date().getDate();
-            console.log(tDate)
-            console.log(res['data']);
+            // console.log(tDate)
+            // console.log(res['data']);
+            let work = res['data']['work'];
+            let days = res['data']['days'];
             content = []
-            content.push("<table class='table table-bordered'>");
-            for (const [key, value] of Object.entries(res['data'])) {
+            content.push("<table class='hour_entry_table table table-bordered'>");
+            for (const [key, value] of Object.entries(res['data']['days'])) {
                 console.log(key, value);
-                row = `<tr><td><span class="date">${key}</span><span class="day">${value}</span></td></tr>`
-              }          
+                content.push(`
+                <tr>
+                    <td width="10%" class="${tDate==key ? 'active' : ''}"  style="text-align: center;">
+                        <span class="date">${key}</span>
+                        <span class="day">${value}</span>
+                    </td>
+                    <td width="30%">
+                        <select class="form-control selectpicker" name="work">`);
+                        for (let x of work){ 
+                            content.push(`<option value=${x[0]}>${x[1]}</option>`);
+                        }
+                    content.push(`</td>
+                    <td width="50%">
+                        <textarea placeholder="Write Your Comment" style=""></textarea>
+                    </td>
+                    <td width="10%">
+                        <input type="text" placeholder="Hours" />
+                    </td>
+                </tr>`);
+            }
+            dates_data = content.join("");
+            $('.time-entries').append(dates_data);
+            $('.selectpicker').selectpicker('refresh');
         }
     }).catch(err =>{
         alert("ERROR");

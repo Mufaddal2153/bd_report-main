@@ -22,12 +22,14 @@ def index():
         userN = request.form['username']
         passW = request.form['password']
 
-        cur.execute("Select username, password from user where username=%s and password=%s", (userN, passW))
+        cur.execute("Select username, password, designation_id from user where username=%s and password=%s", (userN, passW))
         mysql.connection.commit()
         res = cur.fetchall()
-
+        print(res)
         if res:
             session['userN'] = userN
+            session['userD'] = res[0][2]
+
             return render_template('welcome.html', uName = userN) 
         else:
             print('not here')
@@ -164,6 +166,17 @@ def hours_page():
             for i in data:
                 res_dict[i['name']] = int(i['value'])
             
+            cur.execute("select id, work from task where project_id = %s and designation_id = %s", (int(res_dict['project']), session['userD']))
+            mysql.connection.commit()
+            t = cur.fetchall()
+            print(t)
+            work = []
+            for i in t:
+                if (i[0], i[1]) not in work:
+                    work.append((i[0], i[1]))
+            # print(work)
+
+
             obj = calendar.Calendar()
             main_list = list(obj.itermonthdates(res_dict['year'], res_dict['month']))
             days = {}
@@ -171,20 +184,30 @@ def hours_page():
             for i in main_list:
                 if int(i.strftime("%m")) == res_dict['month']:
                     days[int(i.strftime("%d"))] = i.strftime("%A")
-            
-            return json.dumps(days)
-            
+            result = {}
+            result['work'] = work
+            result['days'] = days
 
+            return json.dumps(result)
+            
+        cur.execute("SELECT p.id, p.project_name FROM task t JOIN project p ON p.id = t.`project_id` WHERE t.`designation_id` = %s", (session['userD'],))
+        mysql.connection.commit()
+        res = cur.fetchall()
+        projects = []
+
+        for i in res:
+            if (i[0], i[1]) not in projects:
+                projects.append((i[0], i[1]))
+        # print(projects)
 
         years_back = 3
         year = datetime.today().year - years_back
         YEARS = [year + i for i in range(years_back+15)]
-        print(YEARS)
         temp = calendar.month_name
         
         month_names = [(i, temp[i]) for i in range(len(temp))]
 
-        return render_template('add/add_hours.html', uName = session['uName'], month= month_names, years = YEARS)
+        return render_template('add/add_hours.html', uName = session['uName'], month= month_names, years = YEARS, project=projects)
 
     else:
         return render_template('login.html')

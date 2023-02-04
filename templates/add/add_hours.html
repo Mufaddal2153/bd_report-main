@@ -20,10 +20,24 @@
         <table class="month-year-sel-table" id="month-year-sel-table">
             <tr>
                 <th>
+                    <label for="project">Project</label>
+                </th>
+                <td>
+                    <select class="form-control selectpicker" id="select1" name="project">
+                        <option value="">None</option>
+                        {% for i in project %}
+                            <option value="{{ i[0] }}">{{ i[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>
                     <label for="month">Month</label>
                 </th>
                 <td>
-                    <select class="form-control selectpicker" id="select1" name="month">
+                    <select class="form-control selectpicker" id="select2" name="month">
+                        <option value="">None</option>
                         {% for i in month %}
                             <option value="{{ i[0] }}">{{ i[1] }}</option>
                         {% endfor %}
@@ -35,7 +49,7 @@
                     <label for="year">Year</label>
                 </th>
                 <td>
-                    <select class="form-control selectpicker" id="select2" name="year">
+                    <select class="form-control selectpicker" id="select3" name="year">
                         <option value="">None</option>
                         {% for i in years %}
                             <option value="{{ i }}">{{ i }}</option>
