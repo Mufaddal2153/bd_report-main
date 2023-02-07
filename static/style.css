@@ -36,7 +36,7 @@ body .page .dashboard .top-sec a {width: 25%; padding: 0.5em 2em; background: #E
 body .page .dashboard .header {background: #F7F7F7; text-align: center; padding: 1em 0; margin-top: 1em;}
 td.add_button a:before { font-family: "FontAwesome"; font-weight: 400; content: "\f067"; margin-left: 10px; }
 
-.hour_entry_table .add_button:before {font-family: "FontAwesome"; font-weight: 400; content: "\2b"; margin-right: 10px;}
+.add_inp_button:before {font-family: "FontAwesome"; font-weight: 900; content: "\2b"; font-size: 2em;}
 
 /* body .page .navigation ul.navigations li.log-off-btn:before{font-family: "FontAwesome"; font-weight: 400; content: "\f011"; margin-right: 10px;} */
 body footer {background: #efefef; padding: 1em 0.5em;}

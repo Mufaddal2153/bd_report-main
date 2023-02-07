@@ -207,7 +207,7 @@ def hours_page():
         
         month_names = [(i, temp[i]) for i in range(len(temp))]
 
-        return render_template('add/add_hours.html', uName = session['uName'], month= month_names, years = YEARS, project=projects)
+        return render_template('add/add_hours.html', uName = session['userN'], month= month_names, years = YEARS, project=projects)
 
     else:
         return render_template('login.html')

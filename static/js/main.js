@@ -1,3 +1,4 @@
+row_count = 0;
 $('#add_designation').on('click', function(e) {
     let desi = document.getElementById("add_text").value;
     console.log(desi)
@@ -152,25 +153,41 @@ $('#month-year-sel-table #submit').on('click', function(e) {
                         <span class="day">${value}</span>
                     </td>
                     <td width="30%">
-                        <select class="form-control selectpicker" name="work">`);
-                        for (let x of work){ 
-                            content.push(`<option value=${x[0]}>${x[1]}</option>`);
-                        }
-                    content.push(`</td>
+                        <div class="div_work">
+                            <select class="form-control selectpicker" class="work" name="work">`);
+                            for (let x of work){ 
+                                content.push(`<option value=${x[0]}>${x[1]}</option>`);
+                            }
+                        content.push(`
+                            </select>
+                        </div>
+                        <div class="div_add_button${row_count}">
+                            <button type="button" class="add_inp_button" id="add_inp_button${row_count}"></button>
+                            <span id="input_tag_span${row_count}"><input type="text" class="form-control inp_tags" placeholder="Add Work" /></span>
+                        </div>
+                    </td>
                     <td width="50%">
-                        <textarea placeholder="Write Your Comment" style=""></textarea>
+                        <textarea placeholder="Write Your Comment" class="form-control work"></textarea>
                     </td>
                     <td width="10%">
-                        <input type="text" placeholder="Hours" />
+                        <input type="text" class="form-control" placeholder="Hours" />
                     </td>
                 </tr>`);
+                row_count++;
             }
             dates_data = content.join("");
             $('.time-entries').append(dates_data);
             $('.selectpicker').selectpicker('refresh');
+            $(`.inp_tags`).hide();        
+
         }
     }).catch(err =>{
         alert("ERROR");
         console.log(err);
     })
+})
+
+
+$(`#add_inp_button${row_count}`).on('click', function(){
+    $(`#input_tag_span${row_count} input`).show();
 })
