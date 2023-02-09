@@ -162,8 +162,8 @@ $('#month-year-sel-table #submit').on('click', function(e) {
                             </select>
                         </div>
                         <div class="div_add_button${row_count}">
-                            <button type="button" class="add_inp_button" id="add_inp_button${row_count}"></button>
-                            <span id="input_tag_span${row_count}"><input type="text" class="form-control inp_tags" placeholder="Add Work" /></span>
+                            <button type="button" class="add_inp_button" onClick="add_inp_work()" id="add_inp_button${row_count}"></button>
+                            <span id="input_tag_span${row_count}" class="inp_tags"><input type="text" class="form-control" placeholder="Add Work" /></span>
                         </div>
                     </td>
                     <td width="50%">
@@ -176,7 +176,7 @@ $('#month-year-sel-table #submit').on('click', function(e) {
                 row_count++;
             }
             dates_data = content.join("");
-            $('.time-entries').append(dates_data);
+            $('.time-entries').html(dates_data);
             $('.selectpicker').selectpicker('refresh');
             $(`.inp_tags`).hide();        
 
@@ -188,6 +188,14 @@ $('#month-year-sel-table #submit').on('click', function(e) {
 })
 
 
-$(`#add_inp_button${row_count}`).on('click', function(){
-    $(`#input_tag_span${row_count} input`).show();
-})
+function add_inp_work(){
+    // console.log($(this).siblings());
+    // console.log($(this));
+    $(this).closest('span.inp_tags').show();
+
+}
+
+
+// $(`#add_inp_button${row_count}`).on('click', function(){
+//     $(`#input_tag_span${row_count} input`).show();
+// })
