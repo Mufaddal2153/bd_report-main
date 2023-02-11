@@ -162,7 +162,7 @@ $('#month-year-sel-table #submit').on('click', function(e) {
                             </select>
                         </div>
                         <div class="div_add_button${row_count}">
-                            <button type="button" class="add_inp_button" onClick="add_inp_work()" id="add_inp_button${row_count}"></button>
+                            <button type="button" class="add_inp_button" onClick="add_inp_work(this)" id="add_inp_button${row_count}"></button>
                             <span id="input_tag_span${row_count}" class="inp_tags"><input type="text" class="form-control" placeholder="Add Work" /></span>
                         </div>
                     </td>
@@ -178,8 +178,7 @@ $('#month-year-sel-table #submit').on('click', function(e) {
             dates_data = content.join("");
             $('.time-entries').html(dates_data);
             $('.selectpicker').selectpicker('refresh');
-            $(`.inp_tags`).hide();        
-
+            $(`.inp_tags`).hide();
         }
     }).catch(err =>{
         alert("ERROR");
@@ -188,11 +187,16 @@ $('#month-year-sel-table #submit').on('click', function(e) {
 })
 
 
-function add_inp_work(){
+function add_inp_work(obj){
     // console.log($(this).siblings());
-    // console.log($(this));
-    $(this).closest('span.inp_tags').show();
-
+    chObj = $(obj).parent().children('span.inp_tags');
+    if(chObj.hasClass('active')){
+        chObj.removeClass('active').hide();
+    } else {
+        chObj.addClass('active').show();
+    }
+    
+    
 }
 
 
