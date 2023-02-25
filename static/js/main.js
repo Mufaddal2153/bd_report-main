@@ -163,7 +163,7 @@ $('#month-year-sel-table #submit').on('click', function(e) {
                         </div>
                         <div class="div_add_button${row_count}">
                             <button type="button" class="add_inp_button" onClick="add_inp_work(this)" id="add_inp_button${row_count}"></button>
-                            <span id="input_tag_span${row_count}" class="inp_tags"><input type="text" class="form-control" placeholder="Add Work" /></span>
+                            <span id="input_tag_span${row_count}" class="inp_tags"><input type="text" class="form-control addWork" placeholder="Add Work" /></span>
                         </div>
                     </td>
                     <td width="50%">
@@ -186,20 +186,34 @@ $('#month-year-sel-table #submit').on('click', function(e) {
     })
 })
 
+$('.addWork').keyup(function(e) {
+    console.log($(this));
+    if(e.keyCode == 13) {
+        console.log($(this));
+        return;
+        axios({
+            method: 'PUT',
+            url: baseUrl + '/admin/add_work',
+            data: data
+        }).then(res => {
+    
+            res = JSON.parse(JSON.stringify(res));
+            if (res['data']['msg']) {
+                alert(res['data']['msg']);
+            }
+            window.location.reload(true);
+        }).catch(err =>{
+            alert("ERROR");
+            console.log(err);
+        })       
+    }
+})
 
-function add_inp_work(obj){
-    // console.log($(this).siblings());
+function add_inp_work(obj) {
     chObj = $(obj).parent().children('span.inp_tags');
     if(chObj.hasClass('active')){
         chObj.removeClass('active').hide();
     } else {
         chObj.addClass('active').show();
     }
-    
-    
 }
-
-
-// $(`#add_inp_button${row_count}`).on('click', function(){
-//     $(`#input_tag_span${row_count} input`).show();
-// })

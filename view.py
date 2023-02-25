@@ -142,6 +142,7 @@ def add_user():
                 return jsonify(msg)
             
             cur.execute("insert into user (username, password, designation_id) values (%s, %s, %s)", (res_dict['new_user'], res_dict['new_user_pass'], res_dict['designation']))
+            
             mysql.connection.commit()
             msg['msg'] = f"{res_dict['new_user']} User Added Successfully"
             print(msg)
@@ -230,7 +231,7 @@ def data_list():
 
     return data_list
 
-@bd_report.route('/admin/add_work',methods=['GET','POST'])
+@bd_report.route('/admin/add_work',methods=['GET','POST', 'PUT'])
 def add_work():
     if session['uName']:
         
@@ -244,6 +245,9 @@ def add_work():
             cur.execute("insert into task (work, project_id, designation_id) values (%s, %s, %s)", (res_dict['work'], res_dict['project'], res_dict['designation']))
             mysql.connection.commit()
             return jsonify({'msg': 'Work Added Successfully'})
+        
+        if request.method == 'PUT':
+            pass
 
         cur.execute("select * from project")
         mysql.connection.commit()
