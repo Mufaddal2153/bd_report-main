@@ -126,7 +126,6 @@ $('#month-year-sel-table #submit').on('click', function(e) {
     e.preventDefault()
 
     let data = $('#month_year_form').serializeArray();
-    // console.log(data)
     let baseUrl = new URL(window.location.href);
     baseUrl = `${baseUrl.protocol}//${baseUrl.hostname}:${baseUrl.port}`;
     axios({
@@ -154,7 +153,7 @@ $('#month-year-sel-table #submit').on('click', function(e) {
                     </td>
                     <td width="30%">
                         <div class="div_work">
-                            <select class="form-control selectpicker" class="work" name="work">`);
+                            <select class="form-control selectpicker work" name="work">`);
                             for (let x of work){ 
                                 content.push(`<option value=${x[0]}>${x[1]}</option>`);
                             }
@@ -163,7 +162,7 @@ $('#month-year-sel-table #submit').on('click', function(e) {
                         </div>
                         <div class="div_add_button${row_count}">
                             <button type="button" class="add_inp_button" onClick="add_inp_work(this)" id="add_inp_button${row_count}"></button>
-                            <span id="input_tag_span${row_count}" class="inp_tags"><input type="text" class="form-control addWork" placeholder="Add Work" /></span>
+                            <span id="input_tag_span${row_count}" class="inp-tags"><input type="text" class="form-control addWork" placeholder="Add Work" data-project-id="${data[0]['value']}" /></span>
                         </div>
                     </td>
                     <td width="50%">
@@ -178,7 +177,7 @@ $('#month-year-sel-table #submit').on('click', function(e) {
             dates_data = content.join("");
             $('.time-entries').html(dates_data);
             $('.selectpicker').selectpicker('refresh');
-            $(`.inp_tags`).hide();
+            $(`.inp-tags`).hide();
         }
     }).catch(err =>{
         alert("ERROR");
@@ -186,31 +185,37 @@ $('#month-year-sel-table #submit').on('click', function(e) {
     })
 })
 
-$('.addWork').keyup(function(e) {
-    console.log($(this));
-    if(e.keyCode == 13) {
-        console.log($(this));
-        return;
+$(document).on('keyup', '.inp-tags.active input', function(e) {
+    let baseUrl = new URL(window.location.href);
+    baseUrl = `${baseUrl.protocol}//${baseUrl.hostname}:${baseUrl.port}`;
+
+    if (e.keyCode == 13) {
+        obj = $(this)
+        data = $(this).val();
+        project_id = $(this).attr('data-project-id');
+        // return;
+        console.log(data, project_id);
         axios({
-            method: 'PUT',
-            url: baseUrl + '/admin/add_work',
-            data: data
-        }).then(res => {
-    
-            res = JSON.parse(JSON.stringify(res));
-            if (res['data']['msg']) {
-                alert(res['data']['msg']);
+            method: 'POST',
+            url: baseUrl + '/add_work',
+            data: {
+                data: data, 
+                project_id: project_id
             }
-            window.location.reload(true);
-        }).catch(err =>{
-            alert("ERROR");
-            console.log(err);
-        })       
+        }).then(res => {
+            console.log(res.data.data);
+            // return;
+            $('.work.selectpicker').append($('<option>', {
+                value: res.data.data[0],
+                text: res.data.data[1]
+            })).selectpicker('refresh');
+            obj.val('');
+        })
     }
 })
 
 function add_inp_work(obj) {
-    chObj = $(obj).parent().children('span.inp_tags');
+    chObj = $(obj).parent().children('span.inp-tags');
     if(chObj.hasClass('active')){
         chObj.removeClass('active').hide();
     } else {

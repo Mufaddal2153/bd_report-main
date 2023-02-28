@@ -199,7 +199,7 @@ def hours_page():
         for i in res:
             if (i[0], i[1]) not in projects:
                 projects.append((i[0], i[1]))
-        # print(projects)
+            print(projects)
 
         years_back = 3
         year = datetime.today().year - years_back
@@ -231,7 +231,7 @@ def data_list():
 
     return data_list
 
-@bd_report.route('/admin/add_work',methods=['GET','POST', 'PUT'])
+@bd_report.route('/admin/add_work',methods=['GET','POST'])
 def add_work():
     if session['uName']:
         
@@ -245,9 +245,6 @@ def add_work():
             cur.execute("insert into task (work, project_id, designation_id) values (%s, %s, %s)", (res_dict['work'], res_dict['project'], res_dict['designation']))
             mysql.connection.commit()
             return jsonify({'msg': 'Work Added Successfully'})
-        
-        if request.method == 'PUT':
-            pass
 
         cur.execute("select * from project")
         mysql.connection.commit()
@@ -261,22 +258,27 @@ def add_work():
     else:
         return render_template('admin_login.html')
 
-@bd_report.route('/data_card',methods=['GET','POST'])
-def data_card():
-    list_id = request.form['list_id']
-    token = session.get('token')
+@bd_report.route('/add_work',methods=['GET','POST'])
+def add_emp_work():
+    if request.method == 'POST':
+        if session['userN']:
+            data = request.get_json()
+            cur = mysql.connection.cursor()
+            if data:
+                project_id = data['project_id']
+                userD = session['userD']
+                data = data['data']
+                cur.execute("insert into task (work, project_id, designation_id) values (%s, %s, %s)", (data, project_id, userD))
+                mysql.connection.commit()
 
-
-    base_url = 'https://trello.com/1/'
-    card_url = base_url+"lists/{}/cards".format(list_id)
-
-    params_key_and_token = {'key': key, 'token': token}
-    response_card = requests.get(card_url, params=params_key_and_token)
-
-    data = response_card.json()
-    data_card = {j['id']: j['name'] for j in data}
-    data_card = json.dumps(data_card)
-    return data_card
+                cur.execute("select id, work from task where work = %s and project_id = %s and designation_id = %s", (data, project_id, userD))
+                mysql.connection.commit()
+                t = cur.fetchall()
+                return jsonify({'data': t[0]})
+            return data
+        else:
+            return render_template('login.html')
+    return ''
 
 @bd_report.route('/view_report',methods=['GET','POST'])
 def view_project():
